@@ -63,7 +63,7 @@ set_global_assignment -name VHDL_FILE ram_memory.vhd
 set_global_assignment -name VHDL_FILE dec_7seg.vhd
 set_location_assignment PIN_G21 -to clk
 set_location_assignment PIN_F1 -to reset
-set_location_assignment PIN_H5 -to pir_sensor
+set_location_assignment PIN_AA20 -to pir_sensor
 set_location_assignment PIN_J1 -to led_detect
 set_location_assignment PIN_E11 -to hex0[0]
 set_location_assignment PIN_F11 -to hex0[1]
