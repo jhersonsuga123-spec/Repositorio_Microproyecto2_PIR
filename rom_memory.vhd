@@ -13,7 +13,21 @@ entity rom_memory is
 end entity rom_memory;
 
 architecture behavioral of rom_memory is
-    signal rom : mem_array_t;
+    signal rom : mem_array_t := (
+			0  => x"A1B2",
+			1  => x"C3D4",
+			2  => x"E5F6",
+			3  => x"1A2B",
+			4  => x"3C4D",
+			5  => x"5E6F",
+			6  => x"7A8B",
+			7  => x"9C0D",
+			8  => x"FA01",
+			9  => x"BE82",
+			10 => x"C153",
+			11 => x"D9F4",
+			others => x"0000"
+         );
 
     attribute ram_init_file : string;
     attribute ram_init_file of rom : signal is "codigo_pir.mif";

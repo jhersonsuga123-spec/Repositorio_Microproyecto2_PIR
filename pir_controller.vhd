@@ -38,7 +38,7 @@ begin
             -- Filtro antirrebote por temporizacion
             if sync2 /= pir_debounced then
                 debounce_counter <= debounce_counter + 1;
-                if debounce_counter = 1_000_000 then
+                if debounce_counter = 5 then
                     pir_debounced    <= sync2;
                     debounce_counter <= (others => '0');
                 end if;
