@@ -1,12 +1,21 @@
-WIDTH = 8;
 DEPTH = 256;
+WIDTH = 16;
 ADDRESS_RADIX = HEX;
 DATA_RADIX = HEX;
 
-CONTENT BEGIN
-    00 : A1;
-    01 : B2;
-    02 : C3;
-    03 : D4;
-    [04..FF] : 00;
+CONTENT
+BEGIN
+    00 : A1B2;
+    01 : C3D4;
+    02 : E5F6;
+    03 : 1A2B;
+    04 : 3C4D;
+    05 : 5E6F;
+    06 : 7A8B;
+    07 : 9C0D;
+    08 : FA01;
+    09 : BE82;
+    0A : C153;
+    0B : D9F4;
+    [0C..FF] : 0000;
 END;
