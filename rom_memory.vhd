@@ -3,6 +3,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
 use work.pkg_system.all; 
 
+-- Memoria rom sincrona: Almacena el banco de codigos de identificacion aleatorios.
 entity rom_memory is
     Port (
         clk      : in  std_logic;
@@ -13,6 +14,7 @@ entity rom_memory is
 end entity rom_memory;
 
 architecture behavioral of rom_memory is
+    -- Inicializacion del arreglo de memoria con 12 codigos hexadecimales base
     signal rom : mem_array_t := (
 			0  => x"A1B2",
 			1  => x"C3D4",
@@ -29,6 +31,7 @@ architecture behavioral of rom_memory is
 			others => x"0000"
          );
 
+    -- Directivas de sintesis para inicializar los bloques M9K desde el archivo .mif
     attribute ram_init_file : string;
     attribute ram_init_file of rom : signal is "codigo_pir.mif";
 

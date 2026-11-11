@@ -1,6 +1,7 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
+-- Decodificador combinacional Hexadecimal a 7 segmentos.
 entity dec_7seg is
     Port (
         hex_digit : in  std_logic_vector(3 downto 0);
@@ -12,6 +13,7 @@ architecture behavioral of dec_7seg is
 begin
     process(hex_digit)
     begin
+        -- Logica negada orientada a los displays de anodo comun de la tarjeta Altera DE0
         case hex_digit is
             when "0000" => seg <= "1000000"; -- 0
             when "0001" => seg <= "1111001"; -- 1
@@ -29,7 +31,7 @@ begin
             when "1101" => seg <= "0100001"; -- d
             when "1110" => seg <= "0000110"; -- E
             when "1111" => seg <= "0001110"; -- F
-            when others => seg <= "1111111";
+            when others => seg <= "1111111"; -- Apagado logico ante estados no contemplados
         end case;
     end process;
 end architecture behavioral;

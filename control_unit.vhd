@@ -2,26 +2,26 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
 
--- Maquina de estados que coordina la lectura de ROM y escritura en RAM
+-- Maquina de Estados Finitos tipo Moore para orquestar la ruta de datos y control de memorias
 entity control_unit is
     Port (
-        clk         : in  std_logic; -- Reloj del sistema (50 MHz)
-        reset       : in  std_logic; -- Reset asíncrono global
-        pulse_in    : in  std_logic; -- Pulso de detección del PIR
-        pir_level   : in  std_logic; -- Nivel estable del PIR
-        rom_enable  : out std_logic; -- Habilitador de lectura para la ROM
-        we_ram      : out std_logic; -- Habilitador de escritura para la RAM
-        inc_pointer : out std_logic  -- Incremento de puntero para la RAM
+        clk         : in  std_logic; 
+        reset       : in  std_logic; 
+        pulse_in    : in  std_logic; -- Pulso de activacion proveniente del detector de flanco
+        pir_level   : in  std_logic; -- Nivel de presencia para la logica de retencion
+        rom_enable  : out std_logic; -- Señal de habilitacion de lectura de la rom
+        we_ram      : out std_logic; -- Señal de habilitacion de escritura de la ram 
+        inc_pointer : out std_logic  -- Señal de control para actualizacion de punteros
     );
 end entity control_unit;
 
 architecture rtl of control_unit is
-    -- 5 estados de la FSM
+    -- Definicion de los 5 estados secuenciales de la FSM
     type state_type is (IDLE, READ_ROM, WRITE_RAM, INC_POINTERS, WAIT_RELEASE);
     signal current_state : state_type := IDLE;
 begin
 
-    -- Proceso síncrono: transiciones de estado
+    -- Proceso sincrono: Logica de transicion de estados
     process(clk, reset)
     begin
         if reset = '1' then
@@ -29,7 +29,7 @@ begin
         elsif rising_edge(clk) then
             case current_state is
                 
-                -- Espera activación del sensor
+                -- Estado de reposo: a la espera del flanco de activacion del sensor
                 when IDLE =>
                     if pulse_in = '1' then
                         current_state <= READ_ROM;
@@ -37,19 +37,19 @@ begin
                         current_state <= IDLE;
                     end if;
 
-                -- Solicita dato a la ROM (latencia de 1 ciclo)
+                -- Habilita la lectura de la rom (requiere 1 ciclo de latencia)
                 when READ_ROM =>
                     current_state <= WRITE_RAM;
 
-                -- Guarda dato en RAM
+                -- Ejecuta la escritura sincrona en la ram
                 when WRITE_RAM =>
                     current_state <= INC_POINTERS;
 
-                -- Incrementa dirección de RAM
+                -- Incrementa las direcciones de memoria
                 when INC_POINTERS =>
                     current_state <= WAIT_RELEASE;
 
-                -- Espera a que el sensor baje a '0'
+                -- Estado de retencion: Desacopla la velocidad de operacion de la FPGA respecto a la latencia fisica del sensor para evitar sobreescritura de datos
                 when WAIT_RELEASE =>
                     if pir_level = '1' then
                         current_state <= WAIT_RELEASE;
@@ -63,10 +63,9 @@ begin
         end if;
     end process;
 
-    -- Proceso combinacional: señales de control sin latches
+    -- Proceso combinacional: Logica de salidas (valores por defecto para evitar inferencia de cerrojos o latches)
     process(current_state)
     begin
-        -- Valores por defecto
         rom_enable  <= '0';
         we_ram      <= '0';
         inc_pointer <= '0';
